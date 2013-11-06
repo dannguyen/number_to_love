@@ -17,8 +17,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "number_to_love"
   gem.homepage = "http://github.com/dannguyen/number_to_love"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{A wrapper around number_to_human}
+  gem.description = %Q{A wrapper around number_to_human}
   gem.email = "dansonguyen@gmail.com"
   gem.authors = ["Dan Nguyen"]
   # dependencies defined in Gemfile
