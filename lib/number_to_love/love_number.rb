@@ -8,16 +8,31 @@ module NumberToLove
 
     HUMAN_ACCESSORS = [:precision, :significant, :units, :strip_insignificant_zeros, :delimiter, :separator, :format] 
 
-    ALL_ACCESSORS = HUMAN_ACCESSORS
+    CUSTOM_ACCESSORS = [:minimalize]
+    ALL_ACCESSORS = HUMAN_ACCESSORS | CUSTOM_ACCESSORS
 
     attr_accessor *ALL_ACCESSORS
 
     VERBOSE_UNITS = {}
-    ABBREVIATED_UNITS = {}
+    ABBREVIATED_DECIMAL_UNITS = {            
+            unit: "",
+            # ten:
+            #   one: Ten
+            #   other: Tens
+            # hundred: Hundred
+            thousand: "K",
+            million: "M",
+            billion: "B",
+            trillion: "T"
+          }
 
     def initialize(val, opts={})
       @value = val
       interpret_options(opts)
+
+      @units = ABBREVIATED_DECIMAL_UNITS
+
+
       super(@value)
     end
 
@@ -31,6 +46,10 @@ module NumberToLove
       number_to_human(@value, opts[:number_to_human])
     end
 
+
+    def inspect
+      to_s
+    end
 
 
 
@@ -69,12 +88,23 @@ module NumberToLove
         if ALL_ACCESSORS.include?(a)
           self.instance_variable_set("@#{a}", val)
         end
+
+
       end
     end
 
     # returns a Hash to pass along
     def render_options
       hsh = {}
+      if minval = @minimalize
+        @units = ABBREVIATED_DECIMAL_UNITS
+        @format = "%n%u"
+        @precision = minval
+        @strip_insignificant_zeros = true
+        @delimiter = ''
+        @significant = true
+      end
+
 
       hsh[:number_to_human] = HUMAN_ACCESSORS.inject({}) do |h, att|
         if val = self.instance_variable_get("@#{att}")

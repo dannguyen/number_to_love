@@ -38,8 +38,43 @@ module NumberToLove
       it "delgates all non-numeric methods to String" do 
        # pending "hmmmm...."
         bignum = LoveNumber.new(50000)
-        expect(bignum.upcase).to eq '50 THOUSAND' 
+        expect(bignum.upcase).to eq '50 K' 
       end
+    end
+
+
+    context 'default abbreviated units' do 
+      before do 
+        @num = LoveNumber.new(10000)
+      end
+
+      it 'should have abbreviated units by default' do 
+        expect(@num.to_s).to eq "10 K"
+      end
+    end
+
+
+    context ':minimalize option' do 
+     
+      context 'default options' do 
+        it 'abbreviated units with unspaced format' do 
+          expect(number_to_love(65121, minimalize: 2).to_s).to eq "65K"
+        end
+      
+        it 'should have no delimiters' do 
+          expect(number_to_love(65121, minimalize: 3).to_s).to eq "65.1K"
+        end
+
+        it 'should override all other human options' do 
+          t = number_to_love(65121, minimalize: true)
+          t.units = "%n %u"
+          t.precision = 10
+
+          expect(number_to_love(65121, minimalize: 2).to_s).to eq "65K"
+        end
+      end
+
+
 
     end
 
